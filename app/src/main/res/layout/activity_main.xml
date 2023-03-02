@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Main">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+
+        >
+
+        <EditText
+            android:id="@+id/start_text"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:text="wait"
+            android:textAlignment="center"
+            />
+
+
+        <EditText
+            android:id="@+id/end_text"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="120dp"
+            android:text="wait"
+            android:textAlignment="center"
+            />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/puzzle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Puzzle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/relative_layout"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/pink"
+        />
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/puzzle_button"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/pink"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
