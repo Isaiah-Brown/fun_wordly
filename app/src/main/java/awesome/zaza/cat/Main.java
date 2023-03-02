@@ -13,6 +13,8 @@ import java.util.Arrays;
 
 public class Main extends AppCompatActivity {
 
+    //comment
+
     ArrayList<String> words; // the four words from left to right to be used in the game
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,7 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         words = new ArrayList<>(Arrays.asList("hack", "lack", "lace", "lake"));
+        //comment
 
         updateEditText(); // sets edit text 1 to words[0] and edit text 2 to words[3]
 
