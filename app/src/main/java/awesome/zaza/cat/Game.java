@@ -40,8 +40,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<Integer> visibility;
     RecyclerView rv;
 
-    ImageView iv;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +48,18 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
 
         Intent intent = getIntent();
         words = intent.getStringArrayListExtra("words");
-        initListView();
+        initRecyclerView();
 
         Button hint = findViewById(R.id.hintButton);
         hint.setOnClickListener(view -> giveHint());
 
-        iv = findViewById(R.id.hintImage);
         loopImages();
 
 
 
     }
 
-    public void initListView() {
+    public void initRecyclerView() {
         visibility = new ArrayList<Integer>(Collections.nCopies(words.size(), 0));
         visibility.set(0, 1);
         visibility.set(visibility.size()-1, 1);
@@ -159,6 +156,7 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
                 @Override
                 public void run() {
                     if (img != null) {
+                        ImageView iv = findViewById(R.id.hintImage);
                         iv.setImageBitmap(img);
                     }
                 }
@@ -243,10 +241,12 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        con = null;
         return img;
     }
 
     public void loopImages() {  //https://stackoverflow.com/questions/22860546/android-changing-image-with-time-interval
+        ImageView iv = findViewById(R.id.hintImage);
         new Runnable() {
             public void run() {
                 if(!gameIsOver()) {
