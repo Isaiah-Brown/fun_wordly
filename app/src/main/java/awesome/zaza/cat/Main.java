@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Main extends AppCompatActivity {
 
-    //comment
+    //commentq
 
     ArrayList<String> words; // the four words from left to right to be used in the game
     @Override
