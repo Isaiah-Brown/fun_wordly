@@ -18,7 +18,6 @@ public class Graph {
     public class WordNode{
 
         String word;
-        Integer priority;
         ArrayList <String> path = new ArrayList<String>(); // the list that contains all the words that led to this node
         ArrayList <String> successors = new ArrayList<String>(); // the list that contains all possible expansion
 
@@ -95,6 +94,7 @@ public class Graph {
                     String item = currNode.successors.get(i);
                     if (!words_visited.contains(item)){
                         WordNode newWN = new WordNode(item);
+                        newWN.path.add(currNode.word);
                         queue.addFirst(newWN);
                     }
                 }
