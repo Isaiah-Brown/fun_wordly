@@ -125,5 +125,6 @@ public class Graph {
         for(String s : a) {
             Log.d("solution", s);
         }
+
     }
 }
