@@ -58,7 +58,6 @@ public class Graph {
             if (word.length() == 4){
                 all_the_words.add(word);
                 //Log.d("new word", word);
-                System.out.println(word);
             }
         }
         return all_the_words;
@@ -81,6 +80,7 @@ public class Graph {
 
 
     public ArrayList<String> generateGame(){
+
         boolean validGame = false;
         String randomStart;
         int upperbound = dictionary.size();
@@ -90,7 +90,6 @@ public class Graph {
             randomStart = dictionary.get(random_idx);
             solution = makingSolutionFrom(randomStart);
             if (solution.size() == 4) {
-                System.out.println(solution.toString());
                 validGame = true;
             }
         }
@@ -100,6 +99,7 @@ public class Graph {
 
     public ArrayList<String> makingSolutionFrom(String word){
         words_visited = new ArrayList<String>();
+        solution = new ArrayList<String>();
 
         ArrayList <String> game = new ArrayList<String>();
         game.add(word);
@@ -107,7 +107,7 @@ public class Graph {
         WordNode currWN = new WordNode(word);
 
         while (game.size()<4){
-            System.out.println(game.size());
+            System.out.println(game.toString());
             ArrayList<String> listOfSuccessors = currWN.successors;
             if (listOfSuccessors.size() != 0 && notVisitedAll(listOfSuccessors)){
                 //check to see if there  is no more successors, or all of the successors have been visited
