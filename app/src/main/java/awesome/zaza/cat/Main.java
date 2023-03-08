@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -59,6 +60,7 @@ public class Main extends AppCompatActivity {
         boolean valid = g.playGame(et1.getText().toString(), et2.getText().toString());
         if (valid) {
             Intent i = new Intent(this, Game.class);
+            //Log.d("main", g.solution.get(0));
             i.putStringArrayListExtra("words", g.solution);
             startActivity(i);
         }
