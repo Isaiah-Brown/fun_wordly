@@ -13,6 +13,8 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -137,7 +139,15 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         ImageView hintPhotos = findViewById(R.id.hintImage);
         ImageView heart = findViewById(R.id.heart);
         hintPhotos.setVisibility(View.INVISIBLE);
-        heart.setVisibility(View.VISIBLE);
+
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        //Animation b = AnimationUtils.loadAnimation(this, R.anim.spins);
+        heart.setAnimation(a);
+        heart.animate();
+        //heart.setAnimation(b);
+        //heart.animate();
+
+
         butterToast("You WON!!!");
     }
 
@@ -146,14 +156,18 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
 
     public void giveHint() {
-        int idx = visibility.indexOf(0);
-        String last = words.get(idx-1);
-        String curr = words.get(idx);
-        for(int j = 0; j < last.length(); j++) {
-            if(last.charAt(j) != curr.charAt(j)) {
-                butterToast(String.valueOf(curr.charAt(j)));
-                return;
+        if(!gameIsOver()) {
+            int idx = visibility.indexOf(0);
+            String last = words.get(idx - 1);
+            String curr = words.get(idx);
+            for (int j = 0; j < last.length(); j++) {
+                if (last.charAt(j) != curr.charAt(j)) {
+                    butterToast(String.valueOf(curr.charAt(j)));
+                    return;
+                }
             }
+        } else {
+            endGame();
         }
     }
 
