@@ -94,6 +94,11 @@ public class Graph {
                     String item = currNode.successors.get(i);
                     if (!words_visited.contains(item)){
                         WordNode newWN = new WordNode(item);
+
+                        for (int j = 0; j < currNode.path.size(); j++){
+                            String name = currNode.path.get(j);
+                            newWN.path.add(name);
+                        }
                         newWN.path.add(currNode.word);
                         queue.addFirst(newWN);
                     }
