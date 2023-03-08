@@ -32,8 +32,9 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        words = new ArrayList<>(g.generateGame());
+
         g = initGraph();
+        words = new ArrayList<>(g.generateGame());
         //comment
 
         updateEditText(); // sets edit text 1 to words[0] and edit text 2 to words[3]
