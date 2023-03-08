@@ -83,9 +83,10 @@ public class Graph {
         queue.addFirst(currNode);
 
         while (!currNode.word.equals(endWord)){
-            currNode = queue.pop();
+            currNode = queue.removeLast();
             if (currNode.word.equals(endWord)){
                 solution = currNode.path;
+                solution.add(endWord);
                 pathExist = true;
                 break;
             }

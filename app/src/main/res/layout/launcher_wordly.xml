@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/launcher_ic"
-        android:src="@drawable/img"
+        android:src="@drawable/wordly_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
