@@ -74,7 +74,7 @@ public class Main extends AppCompatActivity {
     }
 
     public void makeNewPuzzle() {
-        words = new ArrayList<>(Arrays.asList("lake", "lace", "lack", "hack"));
+        words = new ArrayList<>(g.generateGame());
         updateEditText();
     }
 
