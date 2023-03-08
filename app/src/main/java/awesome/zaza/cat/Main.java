@@ -3,7 +3,9 @@ package awesome.zaza.cat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -40,6 +42,27 @@ public class Main extends AppCompatActivity {
 
         Button play = findViewById(R.id.play_button);
         play.setOnClickListener(view -> startGame()); // starts the game
+
+
+        //implementing the fresh intall pop up thingy
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        boolean firstStart = prefs.getBoolean("firstStart", true); //check to see if this is the first start or not
+
+        if(firstStart){
+            showStartPage();
+        }
+
+    }
+
+    private void showStartPage(){
+
+        Intent intent = new Intent(getApplicationContext(), wordly_explained.class);
+        startActivity(intent);
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("firstStart", false);
+        editor.apply();
     }
 
     public void updateEditText() {

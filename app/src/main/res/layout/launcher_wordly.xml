@@ -6,9 +6,11 @@
 
     <ImageView
         android:id="@+id/launcher_ic"
-        android:src="@drawable/wordly_icon"
-        android:layout_width="fill_parent"
+        android:src="@drawable/img"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
