@@ -32,12 +32,11 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         g = initGraph();
         if(savedInstanceState != null) {
             words = savedInstanceState.getStringArrayList("words");
         } else {
-            words = new ArrayList<>(g.generateGame());
+            makeNewPuzzle();
         }
         //comment
 
@@ -78,38 +77,50 @@ public class Main extends AppCompatActivity {
     }
 
     public void updateEditText() {
-        EditText et1 = findViewById(R.id.start_text);
-        EditText et2 = findViewById(R.id.end_text);
-        et1.setText(words.get(0));
-        et2.setText(words.get(3));
+        if(words != null) {
+            EditText et1 = findViewById(R.id.start_text);
+            EditText et2 = findViewById(R.id.end_text);
+            et1.setText(words.get(0));
+            et2.setText(words.get(words.size() - 1));
+        }
     }
 
     public void makeNewPuzzle() {
-        words = new ArrayList<>(g.generateGame());
+        try {
+            words = new ArrayList<>(g.randomGame());
+            while(words.size() != 4) {
+                words = new ArrayList<>(g.randomGame());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         updateEditText();
+
     }
 
     public void startGame() {
         EditText et1 = findViewById(R.id.start_text);
         EditText et2 = findViewById(R.id.end_text);
-        boolean valid = g.playGame(et1.getText().toString(), et2.getText().toString());
-        if (valid) {
-            Intent i = new Intent(this, Game.class);
-            //Log.d("main", g.solution.get(0));
-            i.putStringArrayListExtra("words", g.solution);
+        Intent i = new Intent(this, Game.class);
+        if (!et1.getText().toString().equals(words.get(0)) && !et2.getText().toString().equals(words.get(words.size() - 1))) {
+            boolean valid = g.playGame(et1.getText().toString(), et2.getText().toString());
+            if (valid) {
+                //Log.d("main", g.solution.get(0));
+                if(g.solution != null) {
+                    i.putStringArrayListExtra("words", g.solution);
+                    startActivity(i);
+                }
+            } else {
+                butterToast("Please enter different words");
+            }
+        } else {
+            i.putStringArrayListExtra("words", words);
             startActivity(i);
         }
 
+
     }
 
-    public void testGraph() {
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("words/words_test.txt")));
-            Graph g = new Graph(br);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public Graph initGraph() {
         try{

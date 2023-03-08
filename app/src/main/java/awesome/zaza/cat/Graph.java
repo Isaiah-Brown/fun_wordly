@@ -133,6 +133,31 @@ public class Graph {
 
     }
 
+
+    public ArrayList<String> randomGame() {
+        ArrayList<String> wordly = new ArrayList<>();
+        int random_idx = rand.nextInt(dictionary.size());
+        WordNode curr = new WordNode(dictionary.get(random_idx));
+        wordly.add(curr.word);
+        int count = 0;
+        while(wordly.size() < 4 && count < 1000) {
+            count += 1;
+            if (!curr.successors.isEmpty()) {
+                random_idx = rand.nextInt(curr.successors.size());
+                WordNode tmp = new WordNode(curr.successors.get(random_idx));
+                if (!wordly.contains(tmp.word)) {
+                    curr = tmp;
+                    wordly.add(curr.word);
+                }
+            }
+        }
+        printArray("wordly", wordly);
+        return wordly;
+
+    }
+
+
+
     private boolean notVisitedAll(ArrayList <String> los){
         for (int i = 0; i < los.size(); i ++){
             String word = los.get(i);
@@ -144,7 +169,7 @@ public class Graph {
     }
 
     public boolean playGame(String startWord, String endWord){
-        if (!generatedGame) {
+
             boolean pathExist = false; //
             words_visited = new ArrayList<String>();
 
@@ -181,26 +206,23 @@ public class Graph {
             }
 
             if (pathExist){
-                printArray(solution);
+                printArray("solution", solution);
                 return true;
             }
             else{
-                printArray(solution);
+                printArray("solution", solution);
                 return false;
             }
-        }
-        else{
-            return true;
-        }
-
 
     }
 
 
-    public void printArray(ArrayList<String> a) {
-        for(String s : a) {
-            Log.d("solution", s);
+    public void printArray(String message, ArrayList<String> a) {
+        String s = "";
+        for(String ss : a) {
+            s += ss + " ";
         }
+        Log.d(message, s);
 
     }
 }

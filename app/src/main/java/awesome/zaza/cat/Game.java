@@ -176,18 +176,15 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
 
     public void giveHint() {
-        if(!gameIsOver()) {
-            int idx = visibility.indexOf(0);
-            String last = words.get(idx - 1);
-            String curr = words.get(idx);
-            for (int j = 0; j < last.length(); j++) {
-                if (last.charAt(j) != curr.charAt(j)) {
-                    butterToast(String.valueOf(curr.charAt(j)));
-                    return;
-                }
+
+        int idx = visibility.indexOf(0);
+        String last = words.get(idx - 1);
+        String curr = words.get(idx);
+        for (int j = 0; j < last.length(); j++) {
+            if (last.charAt(j) != curr.charAt(j)) {
+                butterToast(String.valueOf(curr.charAt(j)));
+                return;
             }
-        } else {
-            endGame();
         }
     }
 
