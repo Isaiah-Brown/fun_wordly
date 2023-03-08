@@ -34,7 +34,11 @@ public class Main extends AppCompatActivity {
 
 
         g = initGraph();
-        words = new ArrayList<>(g.generateGame());
+        if(savedInstanceState != null) {
+            words = savedInstanceState.getStringArrayList("words");
+        } else {
+            words = new ArrayList<>(g.generateGame());
+        }
         //comment
 
         updateEditText(); // sets edit text 1 to words[0] and edit text 2 to words[3]
@@ -54,6 +58,12 @@ public class Main extends AppCompatActivity {
             showStartPage();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) { //https://www.youtube.com/watch?v=TcTgbVudLyQ
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("words", words);
     }
 
     private void showStartPage(){
