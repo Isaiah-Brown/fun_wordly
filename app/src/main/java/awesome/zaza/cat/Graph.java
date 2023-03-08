@@ -9,9 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Random;
 
 public class Graph {
 
@@ -35,6 +36,7 @@ public class Graph {
     ArrayList <String> solution = new ArrayList<String>();
     ArrayList <String> dictionary; // maybe move this to main
     ArrayList <String> words_visited = new ArrayList<String>();
+    Random rand = new Random();
 
 
 
@@ -72,6 +74,67 @@ public class Graph {
         else{
             return -1;
         }
+    }
+
+
+    public void generateGame(){
+        boolean validGame = false;
+        String randomStart;
+        int upperbound = dictionary.size();
+        int random_idx = rand.nextInt(upperbound);
+
+        while(!validGame){
+            randomStart = dictionary.get(random_idx);
+            solution = makingSolutionFrom(randomStart);
+            if (solution != null){
+                return; // the solution is valid
+            }
+            else{
+                generateGame(); //the solution doesn't have 4 words
+            }
+        }
+    }
+
+    public ArrayList<String> makingSolutionFrom(String word){
+        ArrayList <String> game = new ArrayList<String>();
+        game.add(word);
+        words_visited.add(word);
+        WordNode currWN = new WordNode(word);
+
+        while (game.size()<4){
+            ArrayList<String> listOfSuccessors = currWN.successors;
+            if (listOfSuccessors.size() != 0 && notVisitedAll(listOfSuccessors)){
+                //check to see if there  is no more successors, or all of the successors have been visited
+
+                int random_idx = rand.nextInt(listOfSuccessors.size());
+                String nextWord = listOfSuccessors.get(random_idx);
+
+                if (!words_visited.contains(nextWord)){
+                    game.add(nextWord);
+                    currWN = new WordNode(nextWord);
+                }
+                else{
+                    continue;
+                }
+            }
+            else{
+                return null; // finish running because the start word is not viable
+            }
+        }
+
+        words_visited = new ArrayList<String>();
+        return game;
+
+    }
+
+    private boolean notVisitedAll(ArrayList <String> los){
+        for (int i = 0; i < los.size(); i ++){
+            String word = los.get(i);
+            if (!words_visited.contains(word)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean playGame(String startWord, String endWord){
