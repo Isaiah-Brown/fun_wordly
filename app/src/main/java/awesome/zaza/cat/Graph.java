@@ -116,6 +116,7 @@ public class Graph {
                 String nextWord = listOfSuccessors.get(random_idx);
 
                 if (!words_visited.contains(nextWord)){
+                    words_visited.add(nextWord);
                     game.add(nextWord);
                     currWN = new WordNode(nextWord);
                 }
