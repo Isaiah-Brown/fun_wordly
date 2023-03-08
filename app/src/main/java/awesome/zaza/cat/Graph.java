@@ -22,6 +22,7 @@ public class Graph {
         ArrayList <String> path = new ArrayList<String>(); // the list that contains all the words that led to this node
         ArrayList <String> successors = new ArrayList<String>(); // the list that contains all possible expansion
 
+
         WordNode(String w) {
             word = w;
             for (String some_word : dictionary) {
@@ -31,6 +32,8 @@ public class Graph {
             }
         }
     }
+
+    boolean generatedGame = false;
 
     String fileName = "../../../../assets/words/words_test.txt";
     ArrayList <String> solution = new ArrayList<String>();
@@ -86,10 +89,12 @@ public class Graph {
         while(!validGame){
             randomStart = dictionary.get(random_idx);
             solution = makingSolutionFrom(randomStart);
-            if (solution != null) {
+            if (solution.size() == 4) {
+                System.out.println(solution.toString());
                 validGame = true;
             }
         }
+        generatedGame = true;
         return solution;
     }
 
@@ -102,6 +107,7 @@ public class Graph {
         WordNode currWN = new WordNode(word);
 
         while (game.size()<4){
+            System.out.println(game.size());
             ArrayList<String> listOfSuccessors = currWN.successors;
             if (listOfSuccessors.size() != 0 && notVisitedAll(listOfSuccessors)){
                 //check to see if there  is no more successors, or all of the successors have been visited
@@ -118,7 +124,7 @@ public class Graph {
                 }
             }
             else{
-                return null; // finish running because the start word is not viable
+                return game; // finish running because the start word is not viable
             }
         }
 
@@ -137,51 +143,56 @@ public class Graph {
     }
 
     public boolean playGame(String startWord, String endWord){
+        if (!generatedGame) {
+            boolean pathExist = false; //
+            words_visited = new ArrayList<String>();
 
+            WordNode currNode = new WordNode(startWord);
+            queue.addFirst(currNode);
 
-        boolean pathExist = false; //
-        words_visited = new ArrayList<String>();
+            while (!currNode.word.equals(endWord)){
+                currNode = queue.removeLast();
+                if (currNode.word.equals(endWord)){
+                    solution = currNode.path;
+                    solution.add(endWord);
+                    pathExist = true;
+                    break;
+                }
+                if (!words_visited.contains(currNode.word)){
+                    for(int i = 0; i < currNode.successors.size(); i++){
+                        String item = currNode.successors.get(i);
+                        if (!words_visited.contains(item)){
+                            WordNode newWN = new WordNode(item);
 
-        WordNode currNode = new WordNode(startWord);
-        queue.addFirst(currNode);
-
-        while (!currNode.word.equals(endWord)){
-            currNode = queue.removeLast();
-            if (currNode.word.equals(endWord)){
-                solution = currNode.path;
-                solution.add(endWord);
-                pathExist = true;
-                break;
-            }
-            if (!words_visited.contains(currNode.word)){
-                for(int i = 0; i < currNode.successors.size(); i++){
-                    String item = currNode.successors.get(i);
-                    if (!words_visited.contains(item)){
-                        WordNode newWN = new WordNode(item);
-
-                        for (int j = 0; j < currNode.path.size(); j++){
-                            String name = currNode.path.get(j);
-                            newWN.path.add(name);
+                            for (int j = 0; j < currNode.path.size(); j++){
+                                String name = currNode.path.get(j);
+                                newWN.path.add(name);
+                            }
+                            newWN.path.add(currNode.word);
+                            queue.addFirst(newWN);
                         }
-                        newWN.path.add(currNode.word);
-                        queue.addFirst(newWN);
                     }
                 }
+                if (queue.size()==0){
+                    pathExist = false;
+                } // probably not necessary
+                words_visited.add(currNode.word);
             }
-            if (queue.size()==0){
-                pathExist = false;
-            } // probably not necessary
-            words_visited.add(currNode.word);
-        }
 
-        if (pathExist){
-            printArray(solution);
-            return true;
+            if (pathExist){
+                printArray(solution);
+                return true;
+            }
+            else{
+                printArray(solution);
+                return false;
+            }
         }
         else{
-            printArray(solution);
-            return false;
+            return true;
         }
+
+
     }
 
 
