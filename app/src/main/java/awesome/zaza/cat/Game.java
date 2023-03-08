@@ -44,6 +44,8 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<Integer> visibility;
     RecyclerView rv;
 
+    View v;
+
 
 
 
@@ -157,6 +159,16 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
 
 
         butterToast("You WON!!!");
+
+        View v = findViewById(R.id.game_layout);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), Main.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     public void butterToast(String message) {

@@ -32,7 +32,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        words = new ArrayList<>(Arrays.asList("hack", "lack", "lace", "lake"));
+        words = new ArrayList<>(g.generateGame());
         g = initGraph();
         //comment
 
