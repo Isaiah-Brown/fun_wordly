@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -108,5 +109,10 @@ public class Main extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public void butterToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

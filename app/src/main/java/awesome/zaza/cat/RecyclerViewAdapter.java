@@ -41,6 +41,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
         if (visibility.get(position) == 0) {
             holder.tv.setVisibility(View.INVISIBLE);
+        } else {
+            holder.tv.setVisibility(View.VISIBLE);
         }
 
     }

@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Random;
@@ -39,6 +41,8 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<String> words;
     ArrayList<Integer> visibility;
     RecyclerView rv;
+
+
 
 
     @Override
@@ -100,6 +104,7 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
     @Override
     public void onItemClick() {
+        printVector(visibility);
         makeAltertDialog();
     }
 
@@ -129,6 +134,10 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
 
     public void endGame() {   //do whatever needs to be done at end of game
+        ImageView hintPhotos = findViewById(R.id.hintImage);
+        ImageView heart = findViewById(R.id.heart);
+        hintPhotos.setVisibility(View.INVISIBLE);
+        heart.setVisibility(View.VISIBLE);
         butterToast("You WON!!!");
     }
 
@@ -256,6 +265,17 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
                 }
             }
         }.run();
+    }
+
+    public void printVector(ArrayList<Integer> v) {
+        String s = "";
+
+        for(int x : v) {
+            s += String.valueOf(x) + ", ";
+        }
+
+        Log.d("visibility", s);
+
     }
 }
 
