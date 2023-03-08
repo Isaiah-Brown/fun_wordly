@@ -49,16 +49,16 @@ public class Graph {
 
 
     public static ArrayList <String> generatePossibleWords(BufferedReader br) throws IOException {
-            ArrayList <String> all_the_words = new ArrayList<String>();
-            String word;
-            while ((word = br.readLine()) != null){
-                if (word.length() == 4){
-                    all_the_words.add(word);
-                    //Log.d("new word", word);
-                    System.out.println(word);
-                }
+        ArrayList <String> all_the_words = new ArrayList<String>();
+        String word;
+        while ((word = br.readLine()) != null){
+            if (word.length() == 4){
+                all_the_words.add(word);
+                //Log.d("new word", word);
+                System.out.println(word);
             }
-            return all_the_words;
+        }
+        return all_the_words;
     }
 
     public static int check_matched_letters(String str1, String str2){ //used as heuristics, and for finding successors
@@ -77,7 +77,7 @@ public class Graph {
     }
 
 
-    public void generateGame(){
+    public ArrayList<String> generateGame(){
         boolean validGame = false;
         String randomStart;
         int upperbound = dictionary.size();
@@ -86,16 +86,16 @@ public class Graph {
         while(!validGame){
             randomStart = dictionary.get(random_idx);
             solution = makingSolutionFrom(randomStart);
-            if (solution != null){
-                return; // the solution is valid
-            }
-            else{
-                generateGame(); //the solution doesn't have 4 words
+            if (solution != null) {
+                validGame = true;
             }
         }
+        return solution;
     }
 
     public ArrayList<String> makingSolutionFrom(String word){
+        words_visited = new ArrayList<String>();
+
         ArrayList <String> game = new ArrayList<String>();
         game.add(word);
         words_visited.add(word);
@@ -122,7 +122,6 @@ public class Graph {
             }
         }
 
-        words_visited = new ArrayList<String>();
         return game;
 
     }
@@ -141,6 +140,7 @@ public class Graph {
 
 
         boolean pathExist = false; //
+        words_visited = new ArrayList<String>();
 
         WordNode currNode = new WordNode(startWord);
         queue.addFirst(currNode);
