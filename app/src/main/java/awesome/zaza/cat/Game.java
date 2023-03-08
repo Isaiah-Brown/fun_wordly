@@ -54,6 +54,14 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
 
         Intent intent = getIntent();
         words = intent.getStringArrayListExtra("words");
+
+        if(savedInstanceState != null) {
+            visibility = savedInstanceState.getIntegerArrayList("visibility");
+        } else{
+            visibility = new ArrayList<Integer>(Collections.nCopies(words.size(), 0));
+            visibility.set(0, 1);
+            visibility.set(visibility.size()-1, 1);
+        }
         initRecyclerView();
 
         Button hint = findViewById(R.id.hintButton);
@@ -61,14 +69,14 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
 
         loopImages();
 
-
-
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) { //https://www.youtube.com/watch?v=TcTgbVudLyQ
+        super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList("visibility", visibility);
     }
 
     public void initRecyclerView() {
-        visibility = new ArrayList<Integer>(Collections.nCopies(words.size(), 0));
-        visibility.set(0, 1);
-        visibility.set(visibility.size()-1, 1);
         LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rv = findViewById(R.id.recycle);
         rv.setLayoutManager(llm);
@@ -140,7 +148,7 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         ImageView heart = findViewById(R.id.heart);
         hintPhotos.setVisibility(View.INVISIBLE);
 
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in); //https://www.youtube.com/watch?v=1CllXl9n7iY
         //Animation b = AnimationUtils.loadAnimation(this, R.anim.spins);
         heart.setAnimation(a);
         heart.animate();
