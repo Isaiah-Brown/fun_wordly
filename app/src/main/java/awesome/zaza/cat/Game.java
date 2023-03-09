@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -44,12 +47,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<String> words;
     ArrayList<Integer> visibility;
     RecyclerView rv;
-
-    View v;
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +194,12 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    ImageView iv = findViewById(R.id.hintImage);
                     if (img != null) {
-                        ImageView iv = findViewById(R.id.hintImage);
+                        iv.setVisibility(View.VISIBLE);
                         iv.setImageBitmap(img);
+                    } else {
+                        iv.setVisibility(View.INVISIBLE);
                     }
                 }
             });
@@ -234,61 +234,75 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         StringBuffer data;
 
         String word = words.get(visibility.indexOf(0));
-
-        try {
-            apiURL = new URL("https://pixabay.com/api/?key=34180268-bc5019e2f3cc27cb9ce36eb82&q=" + word + "&image_type=photo");
-            con = (HttpsURLConnection) apiURL.openConnection();
-            con.setRequestMethod("GET");
-            con.connect();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(apiURL.openStream()));
-            data = new StringBuffer();
-            String curLine;
-            while ((curLine = in.readLine()) != null){
-                data.append(curLine);
+        if (isConnected()) {
+            try {
+                apiURL = new URL("https://pixabay.com/api/?key=34180268-bc5019e2f3cc27cb9ce36eb82&q=" + word + "&image_type=photo");
+                con = (HttpsURLConnection) apiURL.openConnection();
+                con.setRequestMethod("GET");
+                con.connect();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-        try {
-            JSONObject jsonAPI = new JSONObject((data.toString()));
-            JSONArray images = jsonAPI.getJSONArray("hits");
-            Random r = new Random();
-            int idx = r.nextInt(10);
-            while(idx > images.length()) {
-                idx = r.nextInt(10);
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(apiURL.openStream()));
+                data = new StringBuffer();
+                String curLine;
+                while ((curLine = in.readLine()) != null) {
+                    data.append(curLine);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            JSONObject image = images.getJSONObject(r.nextInt(images.length()));
-            imageStr = image.getString("webformatURL");
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
 
-        try {
-            URL imageURL = new URL(imageStr);
-            InputStream in = new BufferedInputStream(imageURL.openStream());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            int n = 0;
-            while(-1 != (n = in.read(buf))) {
-                out.write(buf, 0, n);
+            try {
+                JSONObject jsonAPI = new JSONObject((data.toString()));
+                JSONArray images;
+                try {
+                    images = jsonAPI.getJSONArray("hits");
+                    Log.d("length", String.valueOf(images.length()));
+                    if (images.length() < 1) {
+                        return null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                Random r = new Random();
+                int idx = r.nextInt(10);
+                while (idx > images.length()) {
+                    idx = r.nextInt(10);
+                }
+                JSONObject image = images.getJSONObject(idx);
+                imageStr = image.getString("webformatURL");
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
-            out.close();
-            in.close();
 
-            byte[] response = out.toByteArray();
-            img = BitmapFactory.decodeByteArray(response, 0, response.length);
+            try {
+                URL imageURL = new URL(imageStr);
+                InputStream in = new BufferedInputStream(imageURL.openStream());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                byte[] buf = new byte[1024];
+                int n = 0;
+                while (-1 != (n = in.read(buf))) {
+                    out.write(buf, 0, n);
+                }
+                out.close();
+                in.close();
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                byte[] response = out.toByteArray();
+                img = BitmapFactory.decodeByteArray(response, 0, response.length);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            con = null;
+            return img;
+        } else {
+            return null;
         }
-        con = null;
-        return img;
+
     }
 
     public void loopImages() {  //https://stackoverflow.com/questions/22860546/android-changing-image-with-time-interval
@@ -312,6 +326,14 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         }
 
         Log.d("visibility", s);
+
+    }
+
+
+
+    public boolean isConnected(){  //https://stackoverflow.com/questions/5474089/how-to-check-currently-internet-connection-is-available-or-not-in-android
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        return (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
 
     }
 }

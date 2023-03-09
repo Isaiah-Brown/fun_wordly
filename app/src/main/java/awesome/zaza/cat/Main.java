@@ -107,22 +107,24 @@ public class Main extends AppCompatActivity {
             return;
         }
 
-        if (!start.equals(words.get(0)) || !end.equals(words.get(words.size() - 1))) {
+        if (start.equals(words.get(0)) && end.equals(words.get(words.size() - 1))) {
+            Intent i = new Intent(this, Game.class);
+            i.putStringArrayListExtra("words", words);
+            startActivity(i);
+        } else {
             boolean valid = g.playGame(start, end);
             if (valid) {
                 //Log.d("main", g.solution.get(0));
                 if(g.solution != null) {
+                    words = g.solution;
                     Intent i = new Intent(this, Game.class);
-                    i.putStringArrayListExtra("words", g.solution);
+                    i.putStringArrayListExtra("words", words);
                     startActivity(i);
                 }
             } else {
                 butterToast("Please enter different words");
             }
-        } else {
-            Intent i = new Intent(this, Game.class);
-            i.putStringArrayListExtra("words", words);
-            startActivity(i);
+
         }
 
 

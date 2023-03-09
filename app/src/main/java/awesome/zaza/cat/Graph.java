@@ -185,7 +185,7 @@ public class Graph {
     }
 
     public boolean playGame(String startWord, String endWord){
-
+            queue.clear();
             boolean pathExist = false; //
             words_visited = new ArrayList<String>();
 
@@ -223,6 +223,7 @@ public class Graph {
             }
 
             if (pathExist){
+
                 printArray("solution", solution);
                 return true;
             }
