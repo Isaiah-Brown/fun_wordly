@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -43,14 +47,28 @@ import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 
+
 public class Game extends AppCompatActivity implements RecyclerViewInterface {
     ArrayList<String> words;
     ArrayList<Integer> visibility;
     RecyclerView rv;
+
+    private View decorView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                if (i == 0) {
+                    decorView.setSystemUiVisibility(hideSystemBars());
+                }
+            }
+        });
 
         Intent intent = getIntent();
         words = intent.getStringArrayListExtra("words");
@@ -85,8 +103,30 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         outState.putIntegerArrayList("visibility", visibility);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus){
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            decorView.setSystemUiVisibility(hideSystemBars());
+        }
+    }
+
+    private int hideSystemBars() { //https://www.youtube.com/watch?v=zC2CgDExCeI
+        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+    }
+
+
+
+
+
+
     public void initRecyclerView() {
-        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         rv = findViewById(R.id.recycle);
         rv.setLayoutManager(llm);
         RecyclerViewAdapter rva = new RecyclerViewAdapter(this, words, visibility, this);
@@ -200,11 +240,11 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
                 public void run() {
                     ImageView iv = findViewById(R.id.hintImage);
                     if (img != null) {
-                        iv.setVisibility(View.VISIBLE);
                         iv.setImageBitmap(img);
                     } else {
-                        iv.setVisibility(View.INVISIBLE);
+                        iv.setImageResource(R.drawable.wordly_transparent_background);
                     }
+                    iv.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -280,7 +320,9 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
                 JSONObject image = images.getJSONObject(idx);
                 imageStr = image.getString("webformatURL");
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                return null;
+                //throw new RuntimeException(e);
+
             }
 
             try {

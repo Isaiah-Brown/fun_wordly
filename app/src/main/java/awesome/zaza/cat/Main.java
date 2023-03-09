@@ -37,7 +37,7 @@ public class Main extends AppCompatActivity {
     ArrayList<String> words; // the four words from left to right to be used in the game
 
     Graph g;
-    Animation a;
+    boolean gameInProgress = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -113,6 +113,7 @@ public class Main extends AppCompatActivity {
 
     public void startGame() {
 
+
         EditText et1 = findViewById(R.id.start_text);
         EditText et2 = findViewById(R.id.end_text);
         String start = et1.getText().toString();
@@ -126,14 +127,17 @@ public class Main extends AppCompatActivity {
             i.putStringArrayListExtra("words", words);
             startActivity(i);
         } else {
-
+            if(gameInProgress) {
+                return;
+            } else {
+                gameInProgress = true;
+            }
             TextView tv = findViewById(R.id.loading);
             tv.setVisibility(View.VISIBLE);
-            a = AnimationUtils.loadAnimation(this, R.anim.spins);
+            Animation a = AnimationUtils.loadAnimation(this, R.anim.spins);
             a.setRepeatCount(10);
             tv.setAnimation(a);
-            tv.animate()
-                    .setDuration(1000);
+            tv.animate();
 
             LoadExecutor le = new LoadExecutor(); //apes yarn
             le.load(start, end, lcb);
@@ -163,6 +167,7 @@ public class Main extends AppCompatActivity {
                     }
                     TextView tv = findViewById(R.id.loading);
                     tv.setVisibility(View.INVISIBLE);
+                    gameInProgress = false;
                 }
             });
         }
