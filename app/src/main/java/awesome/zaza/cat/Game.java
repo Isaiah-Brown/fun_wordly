@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,8 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -40,7 +36,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Random;
@@ -121,10 +116,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
 
 
-
-
-
-
     public void initRecyclerView() {
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         rv = findViewById(R.id.recycle);
@@ -139,8 +130,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         RecyclerViewAdapter rva = new RecyclerViewAdapter(this, words, visibility, this);
         rv.setAdapter(rva);
     }
-
-
 
     public void makeAltertDialog(int pos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -163,7 +152,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
     }
     @Override
     public void onItemClick(int position) {
-        printVector(visibility);
         makeAltertDialog(position);
     }
 
@@ -198,13 +186,8 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         hintPhotos.setVisibility(View.INVISIBLE);
 
         Animation a = AnimationUtils.loadAnimation(this, R.anim.fade_in); //https://www.youtube.com/watch?v=1CllXl9n7iY
-        //Animation b = AnimationUtils.loadAnimation(this, R.anim.spins);
         heart.setAnimation(a);
         heart.animate();
-        //heart.setAnimation(b);
-        //heart.animate();
-
-
         butterToast("You WON!!!");
 
         View v = findViewById(R.id.game_layout);
@@ -321,8 +304,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
                 imageStr = image.getString("webformatURL");
             } catch (JSONException e) {
                 return null;
-                //throw new RuntimeException(e);
-
             }
 
             try {
@@ -363,19 +344,6 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
             }
         }.run();
     }
-
-    public void printVector(ArrayList<Integer> v) {
-        String s = "";
-
-        for(int x : v) {
-            s += String.valueOf(x) + ", ";
-        }
-
-        Log.d("visibility", s);
-
-    }
-
-
 
     public boolean isConnected(){  //https://stackoverflow.com/questions/5474089/how-to-check-currently-internet-connection-is-available-or-not-in-android
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);

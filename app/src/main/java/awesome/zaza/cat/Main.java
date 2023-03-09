@@ -3,38 +3,33 @@ package awesome.zaza.cat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
+
 import android.view.View;
-import android.view.ViewGroup;
+
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
+
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main extends AppCompatActivity {
 
-    //commentq
-
-    ArrayList<String> words; // the four words from left to right to be used in the game
+    ArrayList<String> words; // the words from left to right to be used in the game
 
     Graph g;
     boolean gameInProgress = false;
@@ -51,9 +46,8 @@ public class Main extends AppCompatActivity {
         } else {
             makeNewPuzzle();
         }
-        //comment
 
-        updateEditText(); // sets edit text 1 to words[0] and edit text 2 to words[3]
+        updateEditText(); // sets edit text 1 to words[0] and edit text 2 to words[-1]
 
         Button puzzle = findViewById(R.id.puzzle_button);
         puzzle.setOnClickListener(view -> makeNewPuzzle()); // changes words to a new set of 4 words
@@ -112,8 +106,6 @@ public class Main extends AppCompatActivity {
     }
 
     public void startGame() {
-
-
         EditText et1 = findViewById(R.id.start_text);
         EditText et2 = findViewById(R.id.end_text);
         String start = et1.getText().toString();
@@ -139,7 +131,7 @@ public class Main extends AppCompatActivity {
             tv.setAnimation(a);
             tv.animate();
 
-            LoadExecutor le = new LoadExecutor(); //apes yarn
+            LoadExecutor le = new LoadExecutor();
             le.load(start, end, lcb);
         }
 
@@ -153,7 +145,6 @@ public class Main extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (valid) {
-                        //Log.d("main", g.solution.get(0));
                         if(g.solution != null && g.solution.size() > 2) {
                             words = g.solution;
                             Intent i = new Intent(getApplicationContext(), Game.class);
@@ -173,10 +164,6 @@ public class Main extends AppCompatActivity {
         }
     };
 
-
-
-
-
     interface LoadCallback {
         void onComplete(boolean valid);
     }
@@ -194,9 +181,6 @@ public class Main extends AppCompatActivity {
 
         }
     }
-
-
-
 
     public Graph initGraph() {
         try{
@@ -235,22 +219,5 @@ public class Main extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    public class Load extends Thread {
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast error = Toast.makeText(getApplicationContext(), "LOADING...", Toast.LENGTH_LONG);
-                    ViewGroup group = (ViewGroup) error.getView();
-                    TextView messageTextView = (TextView) group.getChildAt(0); //        https://stackoverflow.com/questions/5274354/how-can-we-increase-the-font-size-in-toast
-                    messageTextView.setTextSize(25);
-                    messageTextView.setTextColor(getResources().getColor(R.color.light_purple));  //https://stackoverflow.com/questions/4499208/android-setting-text-view-color-from-java-code
-                    error.setGravity(Gravity.CENTER, 0, 0);
-                    error.show();
-                }
-            });
 
-        }
-    }
 }

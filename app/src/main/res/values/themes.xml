@@ -21,6 +21,7 @@
     </style>
 
     <style name="FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/purple_backdrop</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
     </style>

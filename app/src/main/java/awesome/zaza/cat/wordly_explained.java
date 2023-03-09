@@ -8,7 +8,6 @@ import android.text.Layout;
 import android.view.View;
 
 public class wordly_explained extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
