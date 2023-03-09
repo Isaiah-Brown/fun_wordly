@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -69,7 +70,12 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         Button hint = findViewById(R.id.hintButton);
         hint.setOnClickListener(view -> giveHint());
 
-        loopImages();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loopImages();
+            }
+        }, 1000);
 
     }
     @Override
@@ -161,14 +167,10 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         butterToast("You WON!!!");
 
         View v = findViewById(R.id.game_layout);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Main.class);
-                startActivity(i);
-            }
+        v.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), Main.class);
+            startActivity(i);
         });
-
     }
 
     public void butterToast(String message) {

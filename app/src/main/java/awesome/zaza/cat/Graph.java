@@ -33,9 +33,9 @@ public class Graph {
         }
     }
 
-    boolean generatedGame = false;
 
-    String fileName = "../../../../assets/words/words_test.txt";
+
+
     ArrayList <String> solution = new ArrayList<String>();
     ArrayList <String> dictionary; // maybe move this to main
     ArrayList <String> words_visited = new ArrayList<String>();
@@ -93,7 +93,6 @@ public class Graph {
                 validGame = true;
             }
         }
-        generatedGame = true;
         return solution;
     }
 
@@ -201,6 +200,7 @@ public class Graph {
                 }
                 if (queue.size()==0){
                     pathExist = false;
+                    break;
                 } // probably not necessary
                 words_visited.add(currNode.word);
             }

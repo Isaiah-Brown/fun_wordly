@@ -101,12 +101,18 @@ public class Main extends AppCompatActivity {
     public void startGame() {
         EditText et1 = findViewById(R.id.start_text);
         EditText et2 = findViewById(R.id.end_text);
-        Intent i = new Intent(this, Game.class);
-        if (!et1.getText().toString().equals(words.get(0)) && !et2.getText().toString().equals(words.get(words.size() - 1))) {
-            boolean valid = g.playGame(et1.getText().toString(), et2.getText().toString());
+        String start = et1.getText().toString();
+        String end = et2.getText().toString();
+        if(!validInput(start, end)) {
+            return;
+        }
+
+        if (!start.equals(words.get(0)) || !end.equals(words.get(words.size() - 1))) {
+            boolean valid = g.playGame(start, end);
             if (valid) {
                 //Log.d("main", g.solution.get(0));
                 if(g.solution != null) {
+                    Intent i = new Intent(this, Game.class);
                     i.putStringArrayListExtra("words", g.solution);
                     startActivity(i);
                 }
@@ -114,6 +120,7 @@ public class Main extends AppCompatActivity {
                 butterToast("Please enter different words");
             }
         } else {
+            Intent i = new Intent(this, Game.class);
             i.putStringArrayListExtra("words", words);
             startActivity(i);
         }
@@ -131,6 +138,27 @@ public class Main extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean validInput(String start, String end) {
+        Log.d("Start and end", start + " " + end);
+        Log.d("lengths", String.valueOf(start.length()) + " " + String.valueOf(end.length()));
+        if(start.length() != 4 || end.length() != 4) {
+            butterToast("words must be four letters long");
+            return false;
+        }
+        for(int i = 0; i < start.length(); i++) {
+            char startC = start.charAt(i);
+            char endC = end.charAt(i);
+            int sOrd = startC;
+            int eOrd = endC;
+            if(sOrd < 97 || sOrd > 122 || eOrd < 97 || eOrd > 122) {
+                butterToast("words must be lowercase a-z");
+                return false;
+            }
+
+        }
+        return true;
     }
 
 
