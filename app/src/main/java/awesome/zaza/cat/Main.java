@@ -4,12 +4,17 @@ package awesome.zaza.cat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +27,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main extends AppCompatActivity {
 
@@ -30,11 +37,13 @@ public class Main extends AppCompatActivity {
     ArrayList<String> words; // the four words from left to right to be used in the game
 
     Graph g;
+    Animation a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         g = initGraph();
         if(savedInstanceState != null) {
@@ -103,6 +112,7 @@ public class Main extends AppCompatActivity {
     }
 
     public void startGame() {
+
         EditText et1 = findViewById(R.id.start_text);
         EditText et2 = findViewById(R.id.end_text);
         String start = et1.getText().toString();
@@ -116,27 +126,71 @@ public class Main extends AppCompatActivity {
             i.putStringArrayListExtra("words", words);
             startActivity(i);
         } else {
-            Load thread = new Load();
-            thread.start();
-            boolean valid = g.playGame(start, end);
-            if (valid) {
-                //Log.d("main", g.solution.get(0));
-                if(g.solution != null && g.solution.size() > 2) {
-                    words = g.solution;
-                    Intent i = new Intent(this, Game.class);
-                    i.putStringArrayListExtra("words", words);
-                    startActivity(i);
-                } else {
-                    butterToast("Please enter different words");
-                }
-            } else {
-                butterToast("Please enter different words");
-            }
 
+            TextView tv = findViewById(R.id.loading);
+            tv.setVisibility(View.VISIBLE);
+            a = AnimationUtils.loadAnimation(this, R.anim.spins);
+            a.setRepeatCount(10);
+            tv.setAnimation(a);
+            tv.animate()
+                    .setDuration(1000);
+
+            LoadExecutor le = new LoadExecutor(); //apes yarn
+            le.load(start, end, lcb);
         }
 
 
     }
+
+    LoadCallback lcb = new LoadCallback() {
+        @Override
+        public void onComplete(boolean valid) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (valid) {
+                        //Log.d("main", g.solution.get(0));
+                        if(g.solution != null && g.solution.size() > 2) {
+                            words = g.solution;
+                            Intent i = new Intent(getApplicationContext(), Game.class);
+                            i.putStringArrayListExtra("words", words);
+                            startActivity(i);
+                        } else {
+                            butterToast("Please enter different words");
+                        }
+                    } else {
+                        butterToast("Please enter different words");
+                    }
+                    TextView tv = findViewById(R.id.loading);
+                    tv.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    };
+
+
+
+
+
+    interface LoadCallback {
+        void onComplete(boolean valid);
+    }
+
+    public class LoadExecutor {
+        public void load(String start, String end, final LoadCallback lcb) {
+            ExecutorService es = Executors.newFixedThreadPool(1);
+            es.execute(new Runnable() {
+                @Override
+                public void run() {
+                    boolean valid = g.playGame(start, end);
+                    lcb.onComplete(valid);
+                }
+            });
+
+        }
+    }
+
+
 
 
     public Graph initGraph() {

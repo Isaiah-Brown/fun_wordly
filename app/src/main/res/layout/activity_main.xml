@@ -24,6 +24,7 @@
             android:layout_marginStart="120dp"
             android:text="wait"
             android:textAlignment="center"
+            android:imeOptions="actionDone"
             />
 
 
@@ -35,6 +36,7 @@
             android:layout_marginEnd="120dp"
             android:text="wait"
             android:textAlignment="center"
+            android:imeOptions="actionDone"
             />
 
     </RelativeLayout>
@@ -61,6 +63,18 @@
         app:layout_constraintTop_toBottomOf="@id/puzzle_button"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/light_purple"
+        />
+
+    <TextView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="LOADING...."
+        android:visibility="invisible"
         />
 
 
