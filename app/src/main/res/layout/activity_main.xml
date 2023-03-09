@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/relative_layout"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@color/pink"
+        android:backgroundTint="@color/light_purple"
         />
 
     <Button
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/puzzle_button"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/pink"
+        android:backgroundTint="@color/light_purple"
         />
 
 

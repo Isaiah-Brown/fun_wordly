@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Main extends AppCompatActivity {
 
@@ -112,14 +116,18 @@ public class Main extends AppCompatActivity {
             i.putStringArrayListExtra("words", words);
             startActivity(i);
         } else {
+            Load thread = new Load();
+            thread.start();
             boolean valid = g.playGame(start, end);
             if (valid) {
                 //Log.d("main", g.solution.get(0));
-                if(g.solution != null) {
+                if(g.solution != null && g.solution.size() > 2) {
                     words = g.solution;
                     Intent i = new Intent(this, Game.class);
                     i.putStringArrayListExtra("words", words);
                     startActivity(i);
+                } else {
+                    butterToast("Please enter different words");
                 }
             } else {
                 butterToast("Please enter different words");
@@ -166,5 +174,24 @@ public class Main extends AppCompatActivity {
 
     public void butterToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public class Load extends Thread {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast error = Toast.makeText(getApplicationContext(), "LOADING...", Toast.LENGTH_LONG);
+                    ViewGroup group = (ViewGroup) error.getView();
+                    TextView messageTextView = (TextView) group.getChildAt(0); //        https://stackoverflow.com/questions/5274354/how-can-we-increase-the-font-size-in-toast
+                    messageTextView.setTextSize(25);
+                    messageTextView.setTextColor(getResources().getColor(R.color.light_purple));  //https://stackoverflow.com/questions/4499208/android-setting-text-view-color-from-java-code
+                    error.setGravity(Gravity.CENTER, 0, 0);
+                    error.show();
+                }
+            });
+
+        }
     }
 }
