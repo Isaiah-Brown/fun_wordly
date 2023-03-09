@@ -74,6 +74,10 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
             }
         }, 1000);
 
+        if (gameIsOver()){
+            endGame();
+        }
+
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) { //https://www.youtube.com/watch?v=TcTgbVudLyQ
