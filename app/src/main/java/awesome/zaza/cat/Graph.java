@@ -55,12 +55,28 @@ public class Graph {
         ArrayList <String> all_the_words = new ArrayList<String>();
         String word;
         while ((word = br.readLine()) != null){
-            if (word.length() == 4){
+            if (valid(word)){
                 all_the_words.add(word);
                 //Log.d("new word", word);
             }
         }
         return all_the_words;
+    }
+    public static boolean valid(String s) {
+
+        if(s.length() != 4) {
+            return false;
+        }
+
+        for(int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            int cOrd = c;
+            if(cOrd < 97 || cOrd > 122) {
+                return false;
+            }
+
+        }
+        return true;
     }
 
     public static int check_matched_letters(String str1, String str2){ //used as heuristics, and for finding successors
@@ -139,7 +155,7 @@ public class Graph {
         WordNode curr = new WordNode(dictionary.get(random_idx));
         wordly.add(curr.word);
         int count = 0;
-        while(wordly.size() < 4 && count < 1000) {
+        while(wordly.size() < 4 && count < 100) {
             count += 1;
             if (!curr.successors.isEmpty()) {
                 random_idx = rand.nextInt(curr.successors.size());
@@ -151,6 +167,7 @@ public class Graph {
             }
         }
         printArray("wordly", wordly);
+        Log.d("count", String.valueOf(count));
         return wordly;
 
     }

@@ -131,7 +131,7 @@ public class Main extends AppCompatActivity {
 
     public Graph initGraph() {
         try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("words/words_simple.txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("words/words_unix.txt")));
             Graph g = new Graph(br);
             return g;
         }catch (Exception e) {

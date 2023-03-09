@@ -61,9 +61,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
             iv = itemView.findViewById(R.id.imageView);
             tv = itemView.findViewById(R.id.textView);
             itemView.setOnClickListener( view -> {
-                if (rvi != null){
-                    rvi.onItemClick();
+                if (rvi != null) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        rvi.onItemClick(pos);
+                    }
                 }
+
             });
         }
     }

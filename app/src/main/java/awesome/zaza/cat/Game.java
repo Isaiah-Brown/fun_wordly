@@ -101,7 +101,7 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
 
 
 
-    public void makeAltertDialog() {
+    public void makeAltertDialog(int pos) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText et = new EditText(this);
         alert.setTitle("Guess a word");
@@ -109,7 +109,7 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String word = et.getText().toString();
-                checkIfValid(word);
+                checkIfValid(word, pos);
                 dialog.cancel();
             }
         });
@@ -121,21 +121,21 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
         alert.show();
     }
     @Override
-    public void onItemClick() {
+    public void onItemClick(int position) {
         printVector(visibility);
-        makeAltertDialog();
+        makeAltertDialog(position);
     }
 
-    public void checkIfValid(String word) {
-        for (int i = 0; i < words.size(); i++) {
-            if (word.equals(words.get(i))) {
-                updateRecyclerView(i);
-                if (gameIsOver()) {
-                    endGame();
-                }
-                return;
+    public void checkIfValid(String word, int pos) {
+
+        if (word.equals(words.get(pos))) {
+            updateRecyclerView(pos);
+            if (gameIsOver()) {
+                endGame();
             }
+            return;
         }
+
         if (word.length() != 4) {
             butterToast("Word must be four letters!!");
         } else {
@@ -259,7 +259,11 @@ public class Game extends AppCompatActivity implements RecyclerViewInterface {
             JSONObject jsonAPI = new JSONObject((data.toString()));
             JSONArray images = jsonAPI.getJSONArray("hits");
             Random r = new Random();
-            JSONObject image = images.getJSONObject(r.nextInt(10));
+            int idx = r.nextInt(10);
+            while(idx > images.length()) {
+                idx = r.nextInt(10);
+            }
+            JSONObject image = images.getJSONObject(r.nextInt(images.length()));
             imageStr = image.getString("webformatURL");
         } catch (JSONException e) {
             throw new RuntimeException(e);
